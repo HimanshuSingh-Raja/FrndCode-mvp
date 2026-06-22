@@ -52,8 +52,9 @@ export default function SignupPage() {
         createdAt: new Date().toISOString(),
       })
 
-      alert("Account created successfully!")
-      router.push("/student")
+      alert("Account created successfully! Please login.")
+
+      router.push("/login?role=student")
     } catch (error: any) {
       alert(error.message)
     } finally {
@@ -97,7 +98,7 @@ export default function SignupPage() {
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Himanshu Raj"
+                  placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
