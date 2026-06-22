@@ -1,7 +1,9 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDUQdqx3vZidyJs6Xtlq04NZzCKpbdfKao",
+  apiKey: "AIzaSyDUQdqx3vZidyJs6XtlqO4NZzCKpbdfKao",
   authDomain: "frndcode-platform.firebaseapp.com",
   projectId: "frndcode-platform",
   storageBucket: "frndcode-platform.firebasestorage.app",
@@ -10,4 +12,9 @@ const firebaseConfig = {
   measurementId: "G-T714SE5PQ2",
 };
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+export default app;

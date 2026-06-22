@@ -11,62 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Logo } from "@/components/logo"
 import { loginAsTeacher, loginAsStudent } from "@/lib/store"
 import { GraduationCap, BookOpen, ArrowRight } from "lucide-react"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "@/lib/firebase"
 
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const defaultRole = searchParams.get("role") || "teacher"
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("") 
-  const handleFirebaseLogin = async (role: "teacher" | "student") => {
-  try {
-    setIsLoading(true)
-
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    )
-
-    console.log("Logged in:", userCredential.user.email)
-
-    if (role === "teacher") {
-      router.push("/teacher")
-    } else {
-      router.push("/student")
-    }
-  } 
-  catch (error: any) {
-  console.log("Firebase Error:", error)
-  console.log("Code:", error.code)
-  console.log("Message:", error.message)
-
-  let errorMessage = "Something went wrong. Please try again.";
-
-  switch (error.code) {
-    case "auth/invalid-credential":
-    case "auth/wrong-password":
-    case "auth/user-not-found":
-      errorMessage = "Invalid email or password";
-      break;
-
-    case "auth/invalid-email":
-      errorMessage = "Please enter a valid email address";
-      break;
-
-    case "auth/too-many-requests":
-      errorMessage = "Too many attempts. Please try again later";
-      break;
-  }
-
-  alert(errorMessage);
-} finally {
-  setIsLoading(false)
-}
-}
 
   const handleDemoLogin = (role: "teacher" | "student") => {
     setIsLoading(true)
@@ -80,6 +30,7 @@ export default function LoginPage() {
       }
     }, 500)
   }
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
@@ -158,14 +109,13 @@ export default function LoginPage() {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="student-email">Email</Label>
-                    <Input
-                   id="student-email" type="email" placeholder="test@frndcode.com" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <Input id="student-email" type="email" placeholder="student@university.edu" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="student-password">Password</Label>
-                    <Input id="student-password" type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <Input id="student-password" type="password" placeholder="Enter your password" />
                   </div>
-                  <Button className="w-full gap-2" onClick={() => handleFirebaseLogin("student")} disabled={isLoading}>
+                  <Button className="w-full gap-2" onClick={() => handleDemoLogin("student")} disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In as Student"}
                     <ArrowRight className="size-4" />
                   </Button>
@@ -177,7 +127,7 @@ export default function LoginPage() {
                       <span className="bg-card px-2 text-muted-foreground">Or</span>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full bg-transparent" onClick={() => handleFirebaseLogin("student")} disabled={isLoading}>
+                  <Button variant="outline" className="w-full bg-transparent" onClick={() => handleDemoLogin("student")} disabled={isLoading}>
                     Try Demo Account
                   </Button>
                 </CardContent>
@@ -187,7 +137,9 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {"Don't have an account? "}
-            <Link href="/signup">Sign up</Link>
+            <Link href="/login" className="font-medium text-primary hover:underline">
+              Sign up
+            </Link>
           </p>
         </div>
       </main>
